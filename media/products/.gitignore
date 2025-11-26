@@ -1,0 +1,4 @@
+# Ignore all files in media directory except placeholder
+*
+!placeholder.png
+!.gitignore
