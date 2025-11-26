@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Cashier System{% endblock %}
+
+{% block meta_description %}Manage your cashier operations with our intuitive dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold mb-3 animate-fade-in">
+                Welcome to Your <span class="text-accent">Dashboard</span>
+            </h1>
+            <p class="lead text-muted animate-fade-in-delay-1">
+                Monitor your business performance and manage operations efficiently
+            </p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="card-custom p-4 animate-fade-in">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted mb-1 small">Total Sales</p>
+                        <h3 class="fw-bold mb-0">$24,580</h3>
+                    </div>
+                    <div class="icon-box bg-accent-soft">
+                        <i class="bi bi-currency-dollar fs-4 text-accent"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-arrow-up text-accent me-1"></i>
+                    <span class="text-accent small fw-medium">+12.5%</span>
+                    <span class="text-muted small ms-2">vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-custom p-4 animate-fade-in-delay-1">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted mb-1 small">Transactions</p>
+                        <h3 class="fw-bold mb-0">1,429</h3>
+                    </div>
+                    <div class="icon-box bg-accent-soft">
+                        <i class="bi bi-receipt fs-4 text-accent"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-arrow-up text-accent me-1"></i>
+                    <span class="text-accent small fw-medium">+8.2%</span>
+                    <span class="text-muted small ms-2">vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-custom p-4 animate-fade-in-delay-2">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted mb-1 small">Customers</p>
+                        <h3 class="fw-bold mb-0">892</h3>
+                    </div>
+                    <div class="icon-box bg-accent-soft">
+                        <i class="bi bi-people fs-4 text-accent"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-arrow-up text-accent me-1"></i>
+                    <span class="text-accent small fw-medium">+15.3%</span>
+                    <span class="text-muted small ms-2">vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-custom p-4 animate-fade-in-delay-3">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="text-muted mb-1 small">Avg. Order</p>
+                        <h3 class="fw-bold mb-0">$17.20</h3>
+                    </div>
+                    <div class="icon-box bg-accent-soft">
+                        <i class="bi bi-graph-up fs-4 text-accent"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-arrow-down text-danger me-1"></i>
+                    <span class="text-danger small fw-medium">-2.1%</span>
+                    <span class="text-muted small ms-2">vs last month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Quick Actions</h3>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card-custom p-4 h-100">
+                    <div class="icon-box bg-accent-soft mb-3">
+                        <i class="bi bi-plus-circle fs-3 text-accent"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">New Transaction</h5>
+                    <p class="text-muted mb-0 small">Process a new sale or return</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card-custom p-4 h-100">
+                    <div class="icon-box bg-accent-soft mb-3">
+                        <i class="bi bi-file-earmark-text fs-3 text-accent"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Generate Report</h5>
+                    <p class="text-muted mb-0 small">Create sales and inventory reports</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card-custom p-4 h-100">
+                    <div class="icon-box bg-accent-soft mb-3">
+                        <i class="bi bi-gear fs-3 text-accent"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Settings</h5>
+                    <p class="text-muted mb-0 small">Configure system preferences</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card-custom p-4">
+                <h4 class="fw-bold mb-4">Recent Transactions</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1234</td>
+                                <td>John Doe</td>
+                                <td class="text-accent fw-medium">$125.00</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                                <td>2025-11-26</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-accent">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#1233</td>
+                                <td>Jane Smith</td>
+                                <td class="text-accent fw-medium">$89.50</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                                <td>2025-11-26</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-accent">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#1232</td>
+                                <td>Bob Johnson</td>
+                                <td class="text-accent fw-medium">$234.75</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td>2025-11-25</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-accent">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
