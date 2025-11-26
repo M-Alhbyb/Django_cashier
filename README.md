@@ -10,7 +10,7 @@
 2. **manager**
     - [ ]
 
-3. **user**
+3. **cashier**
     - [ ] crud Categories & Products
     - [ ] Search and filtering
     - [ ] Reports
