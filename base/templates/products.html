@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}مخزون المنتجات - نظام الكاشير{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/css/product_cards.css' %}">
+<style>
+    body {
+        direction: rtl;
+        text-align: right;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="">
+
+<div class="container mx-auto px-4 py-8 flex flex-col gap-4 ml-80" style="width: calc(100% - 20rem);">        
+         <!-- Filters & Search -->
+        <form method="get" class="flex gap-4 items-center">
+                        <!-- Search -->
+                            <div class="join w-full flex-1">
+                                <input type="text" name="q" placeholder="ابحث..." class="input input-bordered join-item w-full focus:outline-none focus:border-primary" />
+                                <button class="btn btn-square join-item border-base-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        
+                        <!-- Category Filter -->
+
+                            <select name="category" class="flex-1 select select-bordered w-full focus:outline-none focus:border-primary">
+                                <option value="" selected>كل الفئات</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                        <!-- Sort Filter -->
+                            <select name="sort" class="flex-1 select select-bordered w-full focus:outline-none focus:border-primary">
+                                <option disabled selected>ترتيب حسب</option>
+                                <option value="name_asc">الاسم (أ-ي)</option>
+                                <option value="name_desc">الاسم (ي-أ)</option>
+                                <option value="price_asc">السعر (من الأقل للأعلى)</option>
+                                <option value="price_desc">السعر (من الأعلى للأقل)</option>
+                                <option value="stock_asc">المخزون (من الأقل للأعلى)</option>
+                                <option value="stock_desc">المخزون (من الأعلى للأقل)</option>
+                            </select>
+        </form>
+        <!-- Products Column (Span 3) -->
+        <div class="">
+             <div class="flex flex-col gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                    {% for product in products %}
+                    <div class="product-card-wrapper group animate-fade-in" style="animation-delay: 0.2s;">
+                        <div class="front-card card bg-base-100 shadow-xl border border-base-300 hover:border-primary transition-all duration-300 hover:-translate-y-1">
+                            <input type="hidden" class="product-id" name="{{product}}" price="{{ product.price }}" value="{{ product.id }}">                            
+                            <div class="card-body p-5 flex flex-col gap-4 items-center justify-between">
+                                <div class="badge badge-ghost badge-sm mb-2" style="user-select: none;">{{ product.category.name }}</div>
+                                <h2 class="card-title text-lg leading-tight" style="color: var(--primary-alt); user-select: none;">{{ product.name }}</h2>
+                                <div class="text-lg font-bold text-primary" style="user-select: none;">{{ product.price }} ج.س</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full py-16 text-center animate-fade-in">
+                        <div class="w-24 h-24 bg-base-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">لا توجد منتجات</h3>
+                        <p class="text-base-content/60 max-w-md mx-auto mb-8">المخزون فارغ حالياً. ابدأ بإضافة منتجك الأول إلى النظام.</p>
+                        <button class="btn btn-primary">
+                            إضافة أول منتج
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <form method="post" id="checkout-form" class="hidden checkout-overlay">
+                {% csrf_token %}
+                <div id="printable-checkout" class="checkout-modal" style="background-color: #fff;">
+                    <button type="button" id="close-checkout" class="btn btn-sm btn-circle absolute left-2 top-2">✕</button>
+                    <h3 class="text-2xl font-bold mb-6 text-center">فاتورة الشراء</h3>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="products" class="table w-full checkout-table ">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">المنتج</th>
+                                    <th style="text-align: center;">السعر</th>
+                                    <th style="text-align: center;">الكمية</th>
+                                    <th style="text-align: center;">الإجمالي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-body">
+                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-right font-bold text-lg " style="text-align: right; color: var(--primary);">المجموع الكلي:</td>
+                                    <td class="font-bold text-lg text-primary" id="grand-total">0.00 ج.س</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div class="modal-action mt-6 flex justify-between gap-4">
+                        <button type="button" id="print-receipt-btn" class="btn btn-secondary btn-lg gap-2 flex-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            طباعة
+                        </button>
+                        <button type="submit" class="hidden" id="submit-btn"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+<div class="choosen-orders fixed left-0 top-0 h-screen w-80 bg-base-100 shadow-xl p-6 overflow-y-auto" style="z-index: 10;">
+            <h2 class="card-title text-xl mb-4">المنتجات المختارة</h2>
+            <div id="choosen-products">
+
+            </div>
+            
+            <!-- Checkout Button -->
+            <div class="mt-6 pt-4 border-t border-base-200">
+                <button type="button" class="btn btn-primary w-full gap-2" id="checkout-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    إتمام الطلب
+                </button>
+    </div>
+</div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+<script src="{% static 'base/js/product_cards.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,170 @@
+
+.product-card-wrapper {
+    position: relative;
+    perspective: 1000px;
+    height: 100%;
+}
+
+.front-card {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    backface-visibility: hidden;
+    cursor: pointer;
+}
+
+
+@keyframes flipIn {
+    from { 
+        opacity: 0; 
+        transform: rotateY(90deg) scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: rotateY(0) scale(1); 
+    }
+}
+
+/* Checkout Modal Styles */
+.checkout-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.checkout-overlay.hidden {
+    display: none;
+}
+
+.checkout-modal {
+    background-color: var(--secondary);
+    padding: 2rem;
+    border-radius: var(--rounded-box, 1rem);
+    box-shadow: var(--shadow-xl);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid var(--border);
+}
+
+.checkout-table {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.checkout-table th, .checkout-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid hsl(var(--b2));
+}
+
+.checkout-table th {
+    font-weight: bold;
+    color: var(--primary);
+}
+.checkout-quantity {
+    width: 80px;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--b3));
+    background-color: hsl(var(--b2));
+}
+
+
+@media print {
+    /* 1. Hide global elements (Navbar, Footer, etc.) */
+    body > *:not(main) {
+        display: none !important;
+    }
+
+    /* 2. Hide content inside the container (Product Grid), but keep the form */
+    .container > *:not(.checkout-overlay) {
+        display: none !important;
+    }
+
+    /* 3. Reset layout for parents to ensure form takes full space */
+    html, body, main, .container {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+        display: block !important;
+        max-width: none !important; /* Override container max-width */
+    }
+
+    /* 4. Style the checkout form */
+    .checkout-overlay {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        background: white !important;
+        color: black !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .checkout-overlay * {
+        visibility: visible !important;
+    }
+
+    /* 5. Reset modal inner styling */
+    .checkout-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* 6. Hide interactive elements */
+    #close-checkout, 
+    .checkout-overlay button[type="submit"],
+    .modal-action {
+        display: none !important;
+    }
+
+    /* 7. Typography fixes for print */
+    .checkout-table th, 
+    .checkout-table td,
+    .checkout-modal h3,
+    .checkout-modal .text-primary,
+    .checkout-modal input {
+        color: black !important;
+        border-color: #ddd !important;
+    }
+
+    .checkout-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .checkout-table th, .checkout-table td {
+        border-bottom: 1px solid #000 !important;
+        padding: 10px 0 !important;
+    }
+    
+    /* Remove input styling to look like text */
+    .checkout-overlay input.quantity-input {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        width: auto !important;
+        font-weight: bold !important;
+    }
+}

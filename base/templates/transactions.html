@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}المعاملات - نظام الكاشير{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { direction: rtl; text-align: right; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-4">المعاملات الملغية</h1>
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">المستخدم</th>
+                    <th class="text-center">التاريخ</th>
+                    <th class="text-center">المجموع</th>
+                    <th class="text-center">المنتجات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in refused_transactions %}
+                <tr class="hover">
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-center">{{ transaction.user.username }}</td>
+                    <td class="text-center">{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="text-center">{{ transaction.total_amount|intcomma }} ج.س</td>
+                    <td class="text-center">
+                        <details class="dropdown">
+                            <summary class="btn btn-sm btn-primary">عرض</summary>
+                            <div class="p-4 bg-base-100 rounded-box shadow-lg mt-2">
+                                <table class="table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">المنتج</th>
+                                            <th class="text-center">الكمية</th>
+                                            <th class="text-center">الإجمالي</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in transaction.transaction_products.all %}
+                                        <tr>
+                                            <td class="text-center">{{ item.product.name }}</td>
+                                            <td class="text-center">{{ item.quantity }}</td>
+                                            <td class="text-center">{{ item.item_total|intcomma }} ج.س</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </details>
+                    </td>
+                    <td class="text-center flex gap-2 items-center justify-center">
+                      
+                       <a href="{% url 'base:restore_transaction' transaction.id %}" class="block"> <button class="btn btn-sm btn-success">استرجاع</button></a>
+                        <details class="dropdown">
+                            <summary class="btn btn-sm btn-error">حذف</summary>
+                            <div class="p-4 bg-base-100 rounded-box shadow-lg mt-2">
+                                <p>هل انت متاكد من حذف المعاملة</p>
+                                <div class="flex gap-2">
+                                    <a href="{% url 'base:delete_transaction' transaction.id %}"> <button class="btn btn-sm btn-error">حذف</button></a>
+                                    <button class="btn btn-sm btn-secondary">الغاء</button>
+                                </div>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-8">لا توجد معاملات.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-4">المعاملات</h1>
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">المستخدم</th>
+                    <th class="text-center">التاريخ</th>
+                    <th class="text-center">المجموع</th>
+                    <th class="text-center">المنتجات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr class="hover">
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-center">{{ transaction.user.username }}</td>
+                    <td class="text-center">{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="text-center">{{ transaction.total_amount|intcomma }} ج.س</td>
+                    <td class="text-center">
+                        <details class="dropdown">
+                            <summary class="btn btn-sm btn-primary">عرض</summary>
+                            <div class="p-4 bg-base-100 rounded-box shadow-lg mt-2">
+                                <table class="table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">المنتج</th>
+                                            <th class="text-center">الكمية</th>
+                                            <th class="text-center">الإجمالي</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in transaction.transaction_products.all %}
+                                        <tr>
+                                            <td class="text-center">{{ item.product.name }}</td>
+                                            <td class="text-center">{{ item.quantity }}</td>
+                                            <td class="text-center">{{ item.item_total|intcomma }} ج.س</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </details>
+                    </td>
+                    <td class="text-center">
+                       <a href="{% url 'base:refuse_transaction' transaction.id %}"> <button class="btn btn-sm btn-secondary">إلغاء</button></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-8">لا توجد معاملات.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

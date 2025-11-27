@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}التقارير - نظام الكاشير{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { direction: rtl; text-align: right; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8">التقارير والإحصائيات</h1>
+
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Total Sales -->
+        <div class="stat bg-base-100 rounded-box shadow-lg border border-base-200">
+            <div class="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="stat-title">إجمالي المبيعات</div>
+            <div class="stat-value text-primary">{{ total_sales|intcomma }} ج.س</div>
+            <div class="stat-desc">صافي المبيعات (بعد استبعاد المرتجعات)</div>
+        </div>
+
+        <!-- Total Transactions -->
+        <div class="stat bg-base-100 rounded-box shadow-lg border border-base-200">
+            <div class="stat-figure text-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+            </div>
+            <div class="stat-title">عدد المعاملات</div>
+            <div class="stat-value text-secondary">{{ total_transactions_count }}</div>
+            <div class="stat-desc">إجمالي الفواتير الناجحة</div>
+        </div>
+
+        <!-- Avg Transaction Value -->
+        <div class="stat bg-base-100 rounded-box shadow-lg border border-base-200">
+            <div class="stat-figure text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+            </div>
+            <div class="stat-title">متوسط الفاتورة</div>
+            <div class="stat-value text-accent">{{ avg_transaction_value|intcomma }} ج.س</div>
+            <div class="stat-desc">متوسط قيمة كل عملية بيع</div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Daily Sales Chart -->
+        <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+                <h2 class="card-title mb-4">المبيعات اليومية (آخر 30 يوم)</h2>
+                <div class="h-64">
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales by Category Chart -->
+        <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+                <h2 class="card-title mb-4">المبيعات حسب الفئة</h2>
+                <div class="h-64 flex justify-center">
+                    <canvas id="categorySalesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="card bg-base-100 shadow-xl border border-base-200 mb-8">
+        <div class="card-body">
+            <h2 class="card-title mb-4">أكثر المنتجات مبيعاً</h2>
+            <div class="h-64">
+                <canvas id="topProductsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Common Chart Options
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { family: "'Cairo', sans-serif" }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#f3f4f6' }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    };
+
+    // 1. Daily Sales Chart
+    const dailyCtx = document.getElementById('dailySalesChart').getContext('2d');
+    new Chart(dailyCtx, {
+        type: 'line',
+        data: {
+            labels: {{ daily_sales_labels|safe }},
+            datasets: [{
+                label: 'المبيعات اليومية',
+                data: {{ daily_sales_data|safe }},
+                borderColor: '#7480ff', // Primary color
+                backgroundColor: 'rgba(116, 128, 255, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 3
+            }]
+        },
+        options: commonOptions
+    });
+
+    // 2. Category Sales Chart
+    const categoryCtx = document.getElementById('categorySalesChart').getContext('2d');
+    new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ category_labels|safe }},
+            datasets: [{
+                data: {{ category_data|safe }},
+                backgroundColor: [
+                    '#7480ff', // Primary
+                    '#ff52d9', // Primary Alt
+                    '#00d2d3', // Cyan
+                    '#ff9f43', // Orange
+                    '#5f27cd', // Purple
+                    '#ff6b6b'  // Red
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: { display: false } // No scales for doughnut
+        }
+    });
+
+    // 3. Top Products Chart
+    const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+    new Chart(topProductsCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ top_products_labels|safe }},
+            datasets: [{
+                label: 'الكمية المباعة',
+                data: {{ top_products_data|safe }},
+                backgroundColor: '#ff52d9', // Primary Alt
+                borderRadius: 4
+            }]
+        },
+        options: commonOptions
+    });
+</script>
+{% endblock %}
