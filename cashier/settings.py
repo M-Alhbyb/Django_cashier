@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize', 
     'base',
-    'app_cashier',
-    'app_manager'
+    'base.templatetags.custom_filters',
 ]
 
 MIDDLEWARE = [

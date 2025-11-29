@@ -168,3 +168,48 @@
         font-weight: bold !important;
     }
 }
+
+/* Category Colors - Vibrant */
+.category-color-1 { --card-hue: 0; }       /* Red */
+.category-color-2 { --card-hue: 25; }      /* Orange */
+.category-color-3 { --card-hue: 45; }      /* Gold */
+.category-color-4 { --card-hue: 85; }      /* Lime */
+.category-color-5 { --card-hue: 140; }     /* Green */
+.category-color-6 { --card-hue: 180; }     /* Cyan */
+.category-color-7 { --card-hue: 210; }     /* Blue */
+.category-color-8 { --card-hue: 260; }     /* Purple */
+.category-color-9 { --card-hue: 290; }     /* Magenta */
+.category-color-10 { --card-hue: 330; }    /* Pink */
+
+.product-card-colored {
+    /* Vibrant, saturated colors */
+    background-color: hsl(var(--card-hue), 100%, 70%);
+    border-color: hsl(var(--card-hue), 80%, 20%);
+    border-width: 2px;
+    /* Add a colored shadow to enhance the effect */
+    box-shadow: 0 4px 6px -1px hsl(var(--card-hue), 50%, 90%);
+}
+
+.product-card-colored:hover {
+    border-color: hsl(var(--card-hue), 100%, 60%);
+    background-color: hsl(var(--card-hue), 100%, 87%);
+    /* Stronger colored shadow on hover */
+    box-shadow: 0 10px 15px -3px hsl(var(--card-hue), 60%, 85%);
+}
+
+.product-card-colored .badge {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: hsl(var(--card-hue), 100%, 20%);
+    border-color: hsl(var(--card-hue), 60%, 60%);
+    font-weight: bold;
+}
+
+.product-card-colored .card-title {
+    color: hsl(var(--card-hue), 100%, 15%) !important;
+    font-weight: 800;
+}
+
+.product-card-colored .text-primary {
+    color: hsl(var(--card-hue), 100%, 25%) !important;
+    font-weight: 900;
+}

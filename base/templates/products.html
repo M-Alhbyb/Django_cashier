@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 {% block title %}مخزون المنتجات - نظام الكاشير{% endblock %}
 
 {% block extra_css %}
@@ -53,15 +54,15 @@
         <!-- Products Column (Span 3) -->
         <div class="">
              <div class="flex flex-col gap-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
                     {% for product in products %}
                     <div class="product-card-wrapper group animate-fade-in" style="animation-delay: 0.2s;">
-                        <div class="front-card card bg-base-100 shadow-xl border border-base-300 hover:border-primary transition-all duration-300 hover:-translate-y-1">
+                        <div class="front-card card bg-base-100 shadow-xl border border-base-300 hover:border-primary transition-all duration-300 hover:-translate-y-1 product-card-colored category-color-{{ product.category.id|category_color }}">
                             <input type="hidden" class="product-id" name="{{product}}" price="{{ product.price }}" value="{{ product.id }}">                            
-                            <div class="card-body p-5 flex flex-col gap-4 items-center justify-between">
-                                <div class="badge badge-ghost badge-sm mb-2" style="user-select: none;">{{ product.category.name }}</div>
-                                <h2 class="card-title text-lg leading-tight" style="color: var(--primary-alt); user-select: none;">{{ product.name }}</h2>
-                                <div class="text-lg font-bold text-primary" style="user-select: none;">{{ product.price }} ج.س</div>
+                            <div class="card-body p-5 flex flex-col gap-0 items-center justify-between">
+                                <div class="badge badge-ghost badge-sm mb-2 center m-0" style="user-select: none;">{{ product.category.name }}</div>
+                                <h2 class="card-title text-lg leading-tight center p-0 m-0" style="color: var(--primary-alt); user-select: none; ">{{ product.name }}</h2>
+                                <div class="text-lg font-bold text-primary  center p-0 m-0" style="user-select: none;">{{ product.price }}</div>
                             </div>
                         </div>
                     </div>

@@ -12,7 +12,16 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold mb-8">التقارير والإحصائيات</h1>
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold">التقارير والإحصائيات</h1>
+        <form method="get" class="flex items-center gap-2">
+            <label for="start_date" class="text-base-content/50">من</label>
+            <input type="date" name="start_date" class="input input-bordered w-48" value="{{ start_date }}">
+            <label for="end_date" class="text-base-content/50">إلى</label>
+            <input type="date" name="end_date" class="input input-bordered w-48" value="{{ end_date }}">
+            <button type="submit" class="btn btn-primary">بحث</button>
+        </form>
+    </div>
 
     <!-- Key Metrics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

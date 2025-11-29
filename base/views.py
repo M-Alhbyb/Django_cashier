@@ -9,7 +9,7 @@ from .forms import ProductForm
 from django.http import HttpResponse
 from django.db.models import Q
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 import json
 
 def create_update_category(request): 
@@ -51,7 +51,26 @@ def create_update_product(request):
     return redirect('base:dashboard')
 
 def home(request):
-    return render(request, 'example_dashboard.html')
+    # Calculate statsz
+    valid_transactions = Transaction.objects.filter(is_refused=False)
+    
+    total_sales = valid_transactions.aggregate(total=Sum('total_amount'))['total'] or 0
+    transaction_count = valid_transactions.count()
+    products_count = Product.objects.count()
+    
+    avg_order_value = total_sales / transaction_count if transaction_count > 0 else 0
+    
+    recent_transactions = valid_transactions.order_by('-created_at')[:5]
+    
+    context = {
+        'page': 'home',
+        'total_sales': total_sales,
+        'transaction_count': transaction_count,
+        'products_count': products_count,
+        'avg_order_value': avg_order_value,
+        'recent_transactions': recent_transactions,
+    }
+    return render(request, 'home.html', context)
 
 def dashboard(request):
     products = Product.objects.all()
@@ -159,8 +178,8 @@ def products_view(request):
     return render(request, 'products.html', context)
 
 def transactions_view(request):
-    transactions = Transaction.objects.filter(is_refused=False)
-    refused_transactions = Transaction.objects.filter(is_refused=True)
+    transactions = Transaction.objects.filter(is_refused=False).order_by('-created_at')
+    refused_transactions = Transaction.objects.filter(is_refused=True).order_by('-created_at')
     context = {
         'page':'transactions',
         'transactions':transactions,
@@ -203,13 +222,31 @@ def delete_transaction(request, transaction_id):
 def reports_view(request):
     # Filter valid transactions
     valid_transactions = Transaction.objects.filter(is_refused=False)
+    valid_transactions_products = TransactionProduct.objects.filter(transaction__is_refused=False)
+
+    if request.method == 'GET':
+        start_date_str = request.GET.get('start_date')
+        end_date_str = request.GET.get('end_date')
+
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+            start_dt_naive = datetime.combine(start_date, time.min) 
+            start_dt_aware = timezone.make_aware(start_dt_naive)
+
+            end_dt_naive = datetime.combine(end_date, time.max)
+            end_dt_aware = timezone.make_aware(end_dt_naive)
+
+            
+            valid_transactions = valid_transactions.filter(
+                created_at__range=(start_dt_aware, end_dt_aware)
+            )
+            valid_transactions_products = valid_transactions_products.filter(
+                transaction__created_at__range=(start_dt_aware, end_dt_aware)
+            )
     
-    total_sales = valid_transactions.aggregate(total=Sum('total_amount'))['total'] or 0
-    
-    total_transactions_count = valid_transactions.count()
-    
-    avg_transaction_value = total_sales / total_transactions_count if total_transactions_count > 0 else 0
-    
+
     categories = Category.objects.all()
     sales_by_category = []
     category_labels = []
@@ -217,10 +254,7 @@ def reports_view(request):
     
     for category in categories:
         products = category.product_set.all()
-        category_total = TransactionProduct.objects.filter(
-            transaction__is_refused=False,
-            product__in=products
-        ).aggregate(total=Sum('item_total'))['total'] or 0
+        category_total = valid_transactions_products.filter(product__in=products).aggregate(total=Sum('item_total'))['total'] or 0
         
         if category_total > 0:
             sales_by_category.append({'name': category.name, 'total': category_total})
@@ -228,8 +262,15 @@ def reports_view(request):
             category_data.append(float(category_total))
             
     top_products = Product.objects.annotate(
-        total_sold=Sum('transactionproduct__quantity', filter=Q(transactionproduct__transaction__is_refused=False))
+        total_sold=Sum('transactionproduct__quantity', filter=Q(transactionproduct__in=valid_transactions_products))
     ).order_by('-total_sold')[:5]
+    
+    total_sales = valid_transactions.aggregate(total=Sum('total_amount'))['total'] or 0
+    
+    total_transactions_count = valid_transactions.count()
+    
+    avg_transaction_value = total_sales / total_transactions_count if total_transactions_count > 0 else 0
+    
     
     top_products_labels = [p.name for p in top_products if p.total_sold]
     top_products_data = [p.total_sold for p in top_products if p.total_sold]
@@ -251,6 +292,8 @@ def reports_view(request):
         daily_sales_labels.append(current_date.strftime('%Y-%m-%d'))
         daily_sales_data.append(float(daily_total))
         current_date += timedelta(days=1)
+
+
 
     context = {
         'page': 'reports',

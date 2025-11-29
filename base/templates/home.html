@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}لوحة التحكم - نظام الكاشير{% endblock %}
+
+{% block meta_description %}إدارة عمليات الكاشير الخاصة بك من خلال لوحة التحكم البديهية{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="mb-10 text-right">
+        <h1 class="text-4xl font-bold mb-3 animate-fade-in">
+            مرحباً بك في <span class="text-primary">لوحة التحكم</span>
+        </h1>
+        <p class="text-xl text-base-content/70 animate-fade-in" style="animation-delay: 0.1s;">
+            راقب أداء عملك وقم بإدارة العمليات بكفاءة
+        </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <!-- Card 1: Total Sales -->
+        <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-primary transition-all animate-fade-in">
+            <div class="card-body p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-base-content/70 text-sm font-medium mb-1">إجمالي المبيعات</p>
+                        <h3 class="text-2xl font-bold">{{ total_sales|floatformat:2|intcomma }} ج.س</h3>
+                    </div>
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-success flex items-center font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        محدث
+                    </span>
+                    <span class="text-base-content/50 mr-2">تلقائياً</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Transactions -->
+        <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-primary transition-all animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="card-body p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-base-content/70 text-sm font-medium mb-1">المعاملات</p>
+                        <h3 class="text-2xl font-bold">{{ transaction_count|intcomma }}</h3>
+                    </div>
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-success flex items-center font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        نشط
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Products (was Customers) -->
+        <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-primary transition-all animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="card-body p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-base-content/70 text-sm font-medium mb-1">المنتجات</p>
+                        <h3 class="text-2xl font-bold">{{ products_count|intcomma }}</h3>
+                    </div>
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-base-content/50">إجمالي المخزون</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Avg Order -->
+        <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-primary transition-all animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="card-body p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-base-content/70 text-sm font-medium mb-1">متوسط الطلب</p>
+                        <h3 class="text-2xl font-bold">{{ avg_order_value|floatformat:2 }} ج.س</h3>
+                    </div>
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-base-content/50">لكل معاملة</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-10">
+        <h3 class="text-2xl font-bold mb-6">إجراءات سريعة</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="{% url 'base:products' %}" class="card bg-base-100 hover:bg-base-200 transition-all border border-base-200 hover:border-primary group">
+                <div class="card-body flex-row items-center gap-4">
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg">معاملة جديدة</h5>
+                        <p class="text-base-content/70 text-sm">بدء عملية بيع جديدة</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'base:reports' %}" class="card bg-base-100 hover:bg-base-200 transition-all border border-base-200 hover:border-primary group">
+                <div class="card-body flex-row items-center gap-4">
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg">التقارير</h5>
+                        <p class="text-base-content/70 text-sm">عرض تقارير المبيعات والمخزون</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'base:dashboard' %}" class="card bg-base-100 hover:bg-base-200 transition-all border border-base-200 hover:border-primary group">
+                <div class="card-body flex-row items-center gap-4">
+                    <div class="p-3 bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg">الإعدادات</h5>
+                        <p class="text-base-content/70 text-sm">إدارة المنتجات والفئات</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+        <div class="card-body p-6">
+            <h4 class="text-xl font-bold mb-4">أحدث المعاملات</h4>
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+                    <thead>
+                        <tr class="bg-base-200">
+                            <th>رقم المعاملة</th>
+                            <th>المستخدم</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                            <th>التاريخ</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in recent_transactions %}
+                        <tr>
+                            <td class="font-mono text-sm opacity-70">#{{ transaction.id }}</td>
+                            <td class="font-medium">{{ transaction.user.username }}</td>
+                            <td class="text-primary font-bold">{{ transaction.total_amount|floatformat:2 }} ج.س</td>
+                            <td>
+                                {% if transaction.is_refused %}
+                                <div class="badge badge-error gap-2">مرتجع</div>
+                                {% else %}
+                                <div class="badge badge-success gap-2">مكتمل</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-sm">{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <a href="{% url 'base:transactions' %}" class="btn btn-xs btn-outline btn-primary">عرض</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">لا توجد معاملات حديثة</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

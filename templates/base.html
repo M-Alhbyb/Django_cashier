@@ -16,14 +16,14 @@
     <!-- Google Fonts - Arabic Support -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{% static 'vendor/fonts.css' %}" rel="stylesheet">
     
     <!-- Tailwind CSS + DaisyUI -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="{% static 'vendor/tailwindcss.js' %}"></script>
+    <link href="{% static 'vendor/daisyui.css' %}" rel="stylesheet" type="text/css" />
     
     <!-- Heroicons -->
-    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/index.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/index.js"></script> -->
     
     <!-- Custom Tailwind Config -->
     <script>
@@ -70,8 +70,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-        <!-- Google Fonts - Arabic -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 
     {% block extra_css %}{% endblock %}
 </head>
