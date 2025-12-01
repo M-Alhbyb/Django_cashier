@@ -60,8 +60,17 @@
                 <span class="font-medium sidebar-text whitespace-nowrap">التقارير</span>
             </a>
         </nav>
-
         <!-- User Section -->
+        {% if user.is_authenticated %}
+        <div class="mt-20 pt-6 border-t border-gray-200 flex items-center ">
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300 hover:text-primary transition-all group" title="تسجيل الخروج">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="font-medium sidebar-text whitespace-nowrap">تسجيل الخروج</span>
+            </a>
+        </div>
+        {% else %}
         <div class="mt-20 pt-6 border-t border-gray-200 flex items-center ">
             <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300 hover:text-primary transition-all group" title="تسجيل الدخول">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,6 +79,7 @@
                 <span class="font-medium sidebar-text whitespace-nowrap">تسجيل الدخول</span>
             </a>
         </div>
+        {% endif %}
     </div>
 </aside>
 
